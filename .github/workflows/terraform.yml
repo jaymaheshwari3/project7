@@ -1,0 +1,36 @@
+name: Terraform Validation
+
+# Running workflow when code is pushed or a PR is created
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: Check Terraform Code
+    runs-on: ubuntu-latest
+
+    steps:
+      # Getting code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Installing Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # Checking Terraform formatting
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
+      # Initializing Terraform
+      - name: Terraform Init
+        run: terraform init -backend=false
+
+      # Checking Terraform configuration
+      - name: Terraform Validate
+        run: terraform validate
